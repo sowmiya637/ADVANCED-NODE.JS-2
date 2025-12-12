@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Viewer</title>
+</head>
+<body>
+  <h1>Product Search</h1>
+
+  <input id="pid" type="number" placeholder="Enter Product ID" />
+  <button onclick="getProduct()">Get Product</button>
+
+  <pre id="result"></pre>
+
+  <script>
+    async function getProduct() {
+      const id = document.getElementById("pid").value;
+
+      const query = {
+        query: `
+          query {
+            product(id: ${id}) {
+              id
+              name
+              price
+            }
+          }
+        `,
+      };
+
+      const res = await fetch("http://localhost:3000/graphql", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(query),
+      });
+
+      const data = await res.json();
+      document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
